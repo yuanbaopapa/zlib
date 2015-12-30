@@ -188,6 +188,20 @@ add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZL
 set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
 set_target_properties(zlib PROPERTIES SOVERSION 1)
 
+ADD_CUSTOM_COMMAND(TARGET zlib
+POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_LIST_DIR}/../include"
+COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/zlib.h "${CMAKE_CURRENT_LIST_DIR}/../include"
+COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/zconf.h "${CMAKE_CURRENT_LIST_DIR}/../include"
+COMMENT "copying zconf.h to include dir")
+
+ADD_CUSTOM_COMMAND(TARGET zlibstatic
+POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_LIST_DIR}/../include"
+COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/zlib.h "${CMAKE_CURRENT_LIST_DIR}/../include"
+COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/zconf.h "${CMAKE_CURRENT_LIST_DIR}/../include"
+COMMENT "copying zconf.h to include dir")
+
 if(NOT CYGWIN)
     # This property causes shared libraries on Linux to have the full version
     # encoded into their final filename.  We disable this on Cygwin because
